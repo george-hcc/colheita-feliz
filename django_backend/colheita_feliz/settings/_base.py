@@ -31,6 +31,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    ######
+    'colheita_feliz.apps.api.apps.ApiConfig',
 ]
 
 MIDDLEWARE = [
