@@ -3,17 +3,17 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 # Create your views here.
-def list_all_proc(request):
+def api_base(request):
     return HttpResponse('Bem vindo filho da puta!')
 
-def list_active_proc(request):
+def api_list_endpoints(request):
     pass
 
-def status_proc(request):
+def api_list_devices(request):
     pass
 
-def day_proc(request):
+def api_status(request):
     pass
 
-def order_proc(request):
+def api_order(request):
     pass
