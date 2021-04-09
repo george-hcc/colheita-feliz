@@ -13,7 +13,10 @@ from .models import (Endpoint,
 def api_base(request):
     return HttpResponse('Colheita-Feliz RESTful API v1')
 
-def api_endpoints(request):
+def api_get_endpoints(request):
+    if request.method != 'GET':
+        return HttpResponse(status=405)
+    
     query = Endpoint.objects.order_by('-last_seen')
     list_endpoints = [{'id': ep.endpoint_id,
                        'name': ep.name,
@@ -32,7 +35,10 @@ def api_endpoints(request):
     return JsonResponse(dict_payload,
                         json_dumps_params={'ensure_ascii': False})
 
-def api_devices(request, endpoint_id):
+def api_get_devices(request, endpoint_id):
+    if request.method != 'GET':
+        return HttpResponse(status=405)
+    
     query = Device.objects.filter(endpoint_id=endpoint_id)
     if not query:
         return HttpResponse(status=204)
@@ -56,7 +62,10 @@ def api_devices(request, endpoint_id):
                         json_dumps_params={'ensure_ascii': False})
 
 
-def api_status(request, device_id):
+def api_get_status(request, device_id):
+    if request.method != 'GET':
+        return HttpResponse(status=405)
+    
     query = Status.objects.filter(device_id=device_id)\
                            .order_by('-send_time')[:1]
     if not query:
@@ -69,26 +78,87 @@ def api_status(request, device_id):
     return JsonResponse(dict_payload,
                         json_dumps_params={'ensure_ascii': False})
 
-def api_status_hour(request, device_id):
+def api_get_status_hour(request, device_id):
+    if request.method != 'GET':
+        return HttpResponse(status=405)
+    
     query = Status.objects\
                   .filter(device_id=device_id,
                           send_time__gte=datetime.now()-timedelta(hours=1))\
                   .order_by('-send_time')
     return status_list_response(query)
 
-def api_status_day(request, device_id):
+def api_get_status_day(request, device_id):
+    if request.method != 'GET':
+        return HttpResponse(status=405)
+    
     query = Status.objects\
                   .filter(device_id=device_id,
                           send_time__gte=datetime.now()-timedelta(days=1))\
                   .order_by('-send_time')
     return status_list_response(query)
 
-def api_status_week(request, device_id):
+def api_get_status_week(request, device_id):
+    if request.method != 'GET':
+        return HttpResponse(status=405)
+    
     query = Status.objects\
                   .filter(device_id=device_id,
                           send_time__gte=datetime.now()-timedelta(days=7))\
                   .order_by('-send_time')
     return status_list_response(query)
+
+def api_post_status(request):
+    if request.method != 'POST':
+        return HttpResponse(status=405)
+    try:
+        dict_payload = json.loads(request.body)
+        UTC_offset = dict_payload['UTC_offset']
+        timestamp = dict_payload['timestamp']
+        endpoint_id = dict_payload['id']
+        name_reference = dict_payload['name_reference']
+        samples = dict_payload['samples']
+    except:
+        return HttpResponse(status=400)
+
+    try:
+        UTC_offset = float(UTC_offset)
+        if UTC_offset < -12.0 or UTC_offset > 14.0:
+            raise
+    except:
+        return HttpResponse('Fix your UTC_offset', status=400)
+
+    try:
+        timestamp = float(timestamp)
+        timestamp -= 3600*UTC_offset
+        send_time = datetime.fromtimestamp(timestamp)
+    except:
+        return HttpResponse('Fix your timestamp', status=400)
+
+    if not Endpoint.objects.filter(endpoint_id=endpoint_id).exists():
+        return HttpResponse('Unknown endpoint', status=400)
+
+    try:
+        name_reference = bool(name_reference)
+    except:
+        return HttpResponse('Fix your name_reference flag', status=400)
+
+    for sample in samples:
+        try:
+            if name_reference:
+                device_id = Device.objects.filter(endpoint_id=endpoint_id,
+                                                  name=sample).device_id
+            else:
+                device_id = sample
+                
+            status = Status(value=samples[sample],
+                            device_id=device_id,
+                            send_time=send_time,
+                            recept_time=datetime.now())
+            status.save()
+
+    return HttpResponse(status=200)
+    
 
 #Auxiliary Functions
 
