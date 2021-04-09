@@ -8,19 +8,19 @@ from django.utils import timezone
 class Endpoint(models.Model):
     endpoint_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=32)
-    creation_time = models.DateField(auto_now_add=True)
+    creation_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
     last_seen = models.DateTimeField(blank=True,
                                      null=True)
 
     def is_active(self):
-        if last_seen:
+        if self.last_seen:
             return self.last_seen >= timezone.now() - datetime.timedelta(hours=1)
         else:
             return False
 
     def __str__(self):
-        return 'Endpoint '+str(self.endpoint_id)+': '+self.name
+        return str(self.endpoint_id)+' - '+self.name
 
 
 class Device(models.Model):
@@ -56,7 +56,7 @@ class Device(models.Model):
     update_time = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return 'Device '+str(self.device_id)+': '+self.name
+        return str(self.device_id)+' : '+self.name
 
 
 class Status(models.Model):
@@ -72,4 +72,4 @@ class Status(models.Model):
     recept_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return 'Status '+str(self.status_id)+': '+self.value
+        return str(self.status_id)+' - '+self.value
