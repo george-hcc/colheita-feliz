@@ -16,7 +16,7 @@ def api_base(request):
 def api_get_endpoints(request):
     if request.method != 'GET':
         return HttpResponse(status=405)
-    
+
     query = Endpoint.objects.order_by('-last_seen')
     list_endpoints = [{'id': ep.endpoint_id,
                        'name': ep.name,
@@ -38,7 +38,7 @@ def api_get_endpoints(request):
 def api_get_devices(request, endpoint_id):
     if request.method != 'GET':
         return HttpResponse(status=405)
-    
+
     query = Device.objects.filter(endpoint_id=endpoint_id)
     if not query:
         return HttpResponse(status=204)
@@ -65,14 +65,14 @@ def api_get_devices(request, endpoint_id):
 def api_get_status(request, device_id):
     if request.method != 'GET':
         return HttpResponse(status=405)
-    
+
     query = Status.objects.filter(device_id=device_id)\
                            .order_by('-send_time')[:1]
     if not query:
         return HttpResponse(status=204)
 
     status = query[0]
-    dict_payload = {'id': status.status_id,
+    dict_payload = {'status_id': status.status_id,
                     'measurement_timestamp': get_tstamp(status.send_time),
                     'value': status.value,}
     return JsonResponse(dict_payload,
@@ -81,7 +81,7 @@ def api_get_status(request, device_id):
 def api_get_status_hour(request, device_id):
     if request.method != 'GET':
         return HttpResponse(status=405)
-    
+
     query = Status.objects\
                   .filter(device_id=device_id,
                           send_time__gte=datetime.now()-timedelta(hours=1))\
@@ -91,7 +91,7 @@ def api_get_status_hour(request, device_id):
 def api_get_status_day(request, device_id):
     if request.method != 'GET':
         return HttpResponse(status=405)
-    
+
     query = Status.objects\
                   .filter(device_id=device_id,
                           send_time__gte=datetime.now()-timedelta(days=1))\
@@ -101,7 +101,7 @@ def api_get_status_day(request, device_id):
 def api_get_status_week(request, device_id):
     if request.method != 'GET':
         return HttpResponse(status=405)
-    
+
     query = Status.objects\
                   .filter(device_id=device_id,
                           send_time__gte=datetime.now()-timedelta(days=7))\
@@ -113,11 +113,13 @@ def api_post_status(request):
         return HttpResponse(status=405)
     try:
         dict_payload = json.loads(request.body)
+        print(dict_payload, type(dict_payload))
         UTC_offset = dict_payload['UTC_offset']
         timestamp = dict_payload['timestamp']
         endpoint_id = dict_payload['id']
         name_reference = dict_payload['name_reference']
         samples = dict_payload['samples']
+        samples = json.loads(samples)
     except:
         return HttpResponse(status=400)
 
@@ -135,6 +137,11 @@ def api_post_status(request):
     except:
         return HttpResponse('Fix your timestamp', status=400)
 
+    try:
+        endpoint_id = int(endpoint_id)
+    except:
+        return HttpResponse('Irregular endpoint', status=400)
+
     if not Endpoint.objects.filter(endpoint_id=endpoint_id).exists():
         return HttpResponse('Unknown endpoint', status=400)
 
@@ -143,22 +150,31 @@ def api_post_status(request):
     except:
         return HttpResponse('Fix your name_reference flag', status=400)
 
+    Endpoint.objects.get(endpoint_id=endpoint_id) \
+                    .update(last_seen=datetime.now())
+
     for sample in samples:
+        print(sample, samples[sample])
         try:
+            print(name_reference)
             if name_reference:
-                device_id = Device.objects.filter(endpoint_id=endpoint_id,
-                                                  name=sample).device_id
+                device = Device.objects.get(endpoint_id=endpoint_id,
+                                            name=sample)
             else:
-                device_id = sample
-                
+                device = Device.objects.get(device_id=sample)
+
             status = Status(value=samples[sample],
-                            device_id=device_id,
+                            device_id=device,
                             send_time=send_time,
                             recept_time=datetime.now())
+            print('pimba')
             status.save()
+            print('xau')
+        except:
+            pass
 
     return HttpResponse(status=200)
-    
+
 
 #Auxiliary Functions
 
@@ -169,7 +185,7 @@ def get_tstamp(dtime):
         return dtime
 
 def get_last_value(device_id):
-    q = Status.objects.filter(device_id=device.id)\
+    q = Status.objects.filter(device_id=device_id)\
         .order_by('-send_time')[:1]
     if q:
         return q[0].value
@@ -180,7 +196,7 @@ def status_list_response(statuses):
     if not statuses:
         return HttpResponse(status=204)
 
-    list_status = [{'id': status.status_id,
+    list_status = [{'status_id': status.status_id,
                     'measurement_timestamp': get_tstamp(status.send_time),
                     'value': status.value,}
                    for status in statuses]
