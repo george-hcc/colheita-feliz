@@ -18,7 +18,7 @@ def api_get_endpoints(request):
         return HttpResponse(status=405)
 
     query = Endpoint.objects.order_by('-last_seen')
-    list_endpoints = [{'id': ep.endpoint_id,
+    list_endpoints = [{'endpoint_id': ep.endpoint_id,
                        'name': ep.name,
                        'is_active': ep.is_active(),
                        'last_seen': get_tstamp(ep.last_seen),
@@ -43,7 +43,7 @@ def api_get_devices(request, endpoint_id):
     if not query:
         return HttpResponse(status=204)
 
-    list_devices = [{'id': dev.device_id,
+    list_devices = [{'device_id': dev.device_id,
                      'name': dev.name,
                      'description': dev.description,
                      'device_type': dev.get_device_type_display(),
@@ -116,10 +116,9 @@ def api_post_status(request):
         print(dict_payload, type(dict_payload))
         UTC_offset = dict_payload['UTC_offset']
         timestamp = dict_payload['timestamp']
-        endpoint_id = dict_payload['id']
+        endpoint_id = dict_payload['endpoint_id']
         name_reference = dict_payload['name_reference']
         samples = dict_payload['samples']
-        samples = json.loads(samples)
     except:
         return HttpResponse(status=400)
 
@@ -150,13 +149,11 @@ def api_post_status(request):
     except:
         return HttpResponse('Fix your name_reference flag', status=400)
 
-    Endpoint.objects.get(endpoint_id=endpoint_id) \
-                    .update(last_seen=datetime.now())
+    Endpoint.objects.filter(endpoint_id=endpoint_id).update(last_seen=datetime.now())
 
     for sample in samples:
         print(sample, samples[sample])
         try:
-            print(name_reference)
             if name_reference:
                 device = Device.objects.get(endpoint_id=endpoint_id,
                                             name=sample)
@@ -167,9 +164,7 @@ def api_post_status(request):
                             device_id=device,
                             send_time=send_time,
                             recept_time=datetime.now())
-            print('pimba')
             status.save()
-            print('xau')
         except:
             pass
 
