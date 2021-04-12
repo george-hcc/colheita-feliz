@@ -1,4 +1,5 @@
 import environ
+import django_heroku
 
 from ._base import *
 
@@ -20,3 +21,5 @@ DATABASES = {
     # read os.environ['DATABASE_URL'] and raises ImproperlyConfigured exception if not found
     'default': env.db(),
 }
+
+django_heroku.settings(locals())
