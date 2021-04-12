@@ -17,6 +17,6 @@ from django.urls import include, path
 from django.contrib import admin
 
 urlpatterns = [
-    path('api/', include('colheita_feliz.apps.api.urls')),
+    path('api/', include('django_backend.apps.api.urls')),
     path('admin/', admin.site.urls),
 ]
