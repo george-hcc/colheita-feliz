@@ -5,7 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
-
+    <script src="../js/chart.js"></script>
+    <script src1="../js/script.js"></script>
     <title>Document</title>
 </head>
 
@@ -15,23 +16,42 @@
         
     <ul class="ulComeco">
         <li class="liHeader"><a class="logo" href="Home.html"><img class="logoImagem" src="../css/logo.jfif" width="50" height="50"></a></li>
-        <li class="liHeader"><a class="active" href="Login.html">Login</a></li>
-        <li class="liHeader"><a class="active" href="createAccount.html">New Account</a></li>
+
         <li class="liHeader"><a class="active" href="aboutUs.html">About Us</a></li>
     </ul>
         
-    <div>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae voluptates hic labore adipisci, molestias sequi ratione unde numquam perferendis, expedita excepturi sed fugiat quidem ea? Voluptates eligendi ut in beatae!
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore pariatur doloribus debitis minus corrupti dolor. Fuga numquam harum, unde tempora quaerat earum excepturi nostrum, sint explicabo exercitationem dolores doloremque placeat?</p>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae voluptates hic labore adipisci, molestias sequi ratione unde numquam perferendis, expedita excepturi sed fugiat quidem ea? Voluptates eligendi ut in beatae!
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore pariatur doloribus debitis minus corrupti dolor. Fuga numquam harum, unde tempora quaerat earum excepturi nostrum, sint explicabo exercitationem dolores doloremque placeat?
+    <div class="center">
+        <div id="chart"></div>
 
-        </p>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae voluptates hic labore adipisci, molestias sequi ratione unde numquam perferendis, expedita excepturi sed fugiat quidem ea? Voluptates eligendi ut in beatae!
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore pariatur doloribus debitis minus corrupti dolor. Fuga numquam harum, unde tempora quaerat earum excepturi nostrum, sint explicabo exercitationem dolores doloremque placeat?
+<!---LINE CHART SCRIPT--->
+<canvas id="line-chart" width="300" height="300"></canvas>
+<script>
 
-        </p>
+new Chart(document.getElementById("line-chart"), {
+  type: 'line',
+  data: {
+    labels: [1500,1600,1700,1750,1800,1850,1900,1950,1999],
+    datasets: [{ 
+        data: [86,114,106,106,107,111,133,221,783],
+        label: "Africa",
+        borderColor: "#3e95cd",
+        fill: false
+      }]
+      },
+  options: {
+    title: {
+      display: true,
+      text: 'World population per region (in millions)'
+    }
+  }
+});
+</script>
+
+
+
     </div>
+
+
 
     <ul class="uFim">
         <h2 class="h2uFim">Contacts:</h2>

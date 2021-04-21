@@ -7,13 +7,17 @@ body{
 .ulComeco{
     list-style-type: none;
     margin: 0;
-    padding: 10px;
-    overflow: hidden;
+    padding: 5px;
+    overflow:hidden;
     background-color: #80A72A;
     background-image: linear-gradient(to bottom right, #80A72A,#A4BB2F);
-    top: 100px;
-    bottom: 100px;
+    width: 97%;
+    margin:  0%;
+
+    position:relative;
+    text-align: center;
   }
+  
 
   li a {
  
@@ -28,17 +32,16 @@ body{
   }
 
 
-.active {
-  }
 
 .liHeader{
     float: left;
+    font-size: 140%;
  
 }
 .uFim{
     list-style-type: none;
     margin: 0;
-    padding: 0px;
+    padding: 5px;
     overflow: hidden;
     background-color: #80A72A;
     background-image: linear-gradient(to bottom right, #80A72A,#A4BB2F);
@@ -46,6 +49,8 @@ body{
     bottom: 0px;
     position:relative;
     text-align: center;
+    width: 97%;
+    margin:  0%;
 }
 .h2uFim{
     padding: 10px;
