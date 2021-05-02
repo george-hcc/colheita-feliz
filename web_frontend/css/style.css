@@ -4,15 +4,25 @@ body{
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     font-size: 28px;
 }
-.ulComeco{
-    list-style-type: none;
-    margin: 0;
-    padding: 5px;
+
+.container{
+  width: 90%;
+}
+h1{
+  text-align: center;
+  
+}
+.containerTop{
+    display: flex;
+    flex-direction: row;
+    flex-flow: row wrap;
+    justify-content: space-around;
+
+    margin: auto;
     overflow:hidden;
     background-color: #80A72A;
     background-image: linear-gradient(to bottom right, #80A72A,#A4BB2F);
-    width: 97%;
-    margin:  0%;
+    list-style-type: none;
 
     position:relative;
     text-align: center;
@@ -39,18 +49,19 @@ body{
  
 }
 .uFim{
-    list-style-type: none;
-    margin: 0;
-    padding: 5px;
-    overflow: hidden;
-    background-color: #80A72A;
-    background-image: linear-gradient(to bottom right, #80A72A,#A4BB2F);
-    top: 0px;
-    bottom: 0px;
-    position:relative;
-    text-align: center;
-    width: 97%;
-    margin:  0%;
+  display: flex;
+  flex-direction: column;
+
+  justify-content: space-around;
+
+  margin: auto;
+  overflow:hidden;
+  background-color: #80A72A;
+  background-image: linear-gradient(to bottom right, #80A72A,#A4BB2F);
+  list-style-type: none;
+
+  position:relative;
+  text-align: center;
 }
 .h2uFim{
     padding: 10px;
@@ -58,4 +69,27 @@ body{
 .liFim{
     padding: 10px;
     float:bottom;
+}
+.h3Horta{
+  text-align: center;
+  font-family: 'Trocchi', serif; font-size: 45px; font-weight: normal; line-height: 48px; margin: 0;
+}
+/*/////////////////////////////
+////////////Buttons///////////
+///////////////////////////*/
+.buttonsDiv{
+  display: flex;
+  flex-direction:column;
+  flex-flow: column wrap;
+  justify-content: space-between;
+}
+Button{
+  margin:  auto;
+color: blue;
+background-color: white;
+
+ text-align: center; 
+ font-size: 50px;
+  width:95%;
+
 }

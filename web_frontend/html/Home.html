@@ -6,48 +6,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
     <script src="../js/chart.js"></script>
-    <script src1="../js/script.js"></script>
-    <title>Document</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <title>🌼Colheita Feliz🌼</title>
 </head>
 
 
 <body>
 
-        
-    <ul class="ulComeco">
-        <li class="liHeader"><a class="logo" href="Home.html"><img class="logoImagem" src="../css/logo.jfif" width="50" height="50"></a></li>
+
+    <ul class="containerTop">
+        <img class="logoImagem" src="../css/logo.jfif" width="80" height="65"  >
+
+        <li class="liHeader"><a class="active" href="Home.html">Home</a></li>
 
         <li class="liHeader"><a class="active" href="aboutUs.html">About Us</a></li>
     </ul>
         
-    <div class="center">
-        <div id="chart"></div>
+    <div class="buttonsDiv">
 
-<!---LINE CHART SCRIPT--->
-<canvas id="line-chart" width="300" height="300"></canvas>
-<script>
-
-new Chart(document.getElementById("line-chart"), {
-  type: 'line',
-  data: {
-    labels: [1500,1600,1700,1750,1800,1850,1900,1950,1999],
-    datasets: [{ 
-        data: [86,114,106,106,107,111,133,221,783],
-        label: "Africa",
-        borderColor: "#3e95cd",
-        fill: false
-      }]
-      },
-  options: {
-    title: {
-      display: true,
-      text: 'World population per region (in millions)'
-    }
-  }
-});
-</script>
-
-
+        <script src="../js/scriptChart.js"></script>
+        
+        <h3 class="h3Horta">Horta 1: teste</h3>
+       
+     
+        <div id='myData'></div>
 
     </div>
 
@@ -59,5 +43,7 @@ new Chart(document.getElementById("line-chart"), {
         <li class="liFim"><a href="https://www.facebook.com/marcio.almeida.5201/">Facebook</a></li>
         <li class="liFim">WhatApp: (83) 99659-2125 </li>
     </ul>
+<!---LINE CHART SCRIPT--->
+
 </body>
 </html>
