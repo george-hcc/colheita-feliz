@@ -43,44 +43,55 @@ const grabButton = function (deviceName,deviceId,unit){
 
 renderButtons(data,deviceName,deviceId,unit);
 
-
+document.querySelector(`.graphButton${deviceId}`).addEventListener('dblclick',function(){
+ myChart.destroy();
+});
 document.querySelector(`.graphButton${deviceId}`).addEventListener('click',function(){
 
-  myChart=new Chart(document.getElementById(`myChart${deviceId}`).getContext("2d"), {
-    type: 'line',
-    data: {
-      labels: measurement_timestamp,
-      datasets: [{ 
-          data: value,
-          label: deviceName,
-          borderColor: "#180cbd",
-          backgroundColor: "#180cbd",
-          fill: false
-        }]
+  if(myChart != null){
+    console.log('destroy');
+    myChart.destroy();
+    myChart=null;
+ }    
+ else{
+   myChart = new Chart(document.getElementById(`myChart${deviceId}`).getContext("2d"), {
+      type: 'line',
+      data: {
+        labels: measurement_timestamp,
+        datasets: [{ 
+            data: value,
+            label: deviceName,
+            borderColor: "#180cbd",
+            backgroundColor: "#180cbd",
+            fill: false
+          }]
+          },
+      options: {
+        title: {
+          display: true,
+  
         },
-    options: {
-      title: {
-        display: true,
-
+        responsive: true,
+        maintainAspectRatio: true,
+        scales:{ 
+          y: {
+          ticks: {
+          }
       },
-      responsive: true,
-      maintainAspectRatio: true,
-      scales:{ 
-        y: {
+      x: {
         ticks: {
+  
         }
-    },
-    x: {
-      ticks: {
-
-      }
-  }
-  }
     }
-   
-  });
- 
+    }
+      }
+     
+    
+  })
+} 
+  
     })
+  
 })
 
 }
