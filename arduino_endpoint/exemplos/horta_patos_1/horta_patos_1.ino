@@ -8,9 +8,12 @@
 #define DHT11_PIN 2
 dht DHT;
 
-const uint32_t loop_delay = 1000;
+#define LDR_PIN A0
+
+const uint32_t loop_delay = 2000;
 uint8_t air_humi;
 uint8_t air_temp;
+uint16_t luminosity;
 
 void read_air()
 {
@@ -34,6 +37,15 @@ void read_air()
   
 }
 
+void read_ldr()
+{
+  luminosity = analogRead(LDR_PIN);
+  #if DEBUG
+    Serial.print("Luminosidade: ");
+    Serial.println(luminosity);
+  #endif
+}
+
 void setup()
 {
   Serial.begin(9600);
@@ -46,8 +58,12 @@ void setup()
 void loop()
 {
   read_air();
+  read_ldr();
   digitalWrite(13, HIGH);
   delay(loop_delay);
+
+  read_air();
+  read_ldr();
   digitalWrite(13, LOW);
   delay(loop_delay);
 }
