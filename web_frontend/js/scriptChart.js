@@ -31,11 +31,11 @@ const grabButton = function (deviceName,deviceId,unit){
         
         
 
-        var value= data.status.map(function(elem){
+        var value= data.status.reverse().map(function(elem){
             return elem.value;
             
         })
-        var measurement_timestamp= data.status.map(function(elem){
+        var measurement_timestamp= data.status.reverse().map(function(elem){
       
             return elem.measurement_timestamp;
         })
@@ -43,9 +43,7 @@ const grabButton = function (deviceName,deviceId,unit){
 
 renderButtons(data,deviceName,deviceId,unit);
 
-document.querySelector(`.graphButton${deviceId}`).addEventListener('dblclick',function(){
- myChart.destroy();
-});
+
 document.querySelector(`.graphButton${deviceId}`).addEventListener('click',function(){
 
   if(myChart != null){
@@ -100,7 +98,7 @@ document.querySelector(`.graphButton${deviceId}`).addEventListener('click',funct
 
 
 //Function responsible for reading the number of devices from a person, the name and data type of those device
-const grabDevice = function (deviceNum){
+const grabDevices = function (deviceNum){
 const reqDevices= new XMLHttpRequest();
     reqDevices.open('GET',`https://colheita-feliz.herokuapp.com/api/get/devices/${deviceNum}/`);
     reqDevices.send();
@@ -145,4 +143,4 @@ const reqDevices= new XMLHttpRequest();
         }
       })}
 
-grabDevice('1')
+grabDevices('5')
