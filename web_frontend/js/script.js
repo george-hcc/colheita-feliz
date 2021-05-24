@@ -1,4 +1,4 @@
-
+//test//
 const fucki= function (work){
 
 const req= new XMLHttpRequest();
