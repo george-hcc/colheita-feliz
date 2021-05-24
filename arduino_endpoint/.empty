@@ -1,0 +1,86 @@
+#include <WiFi.h>
+#include <WiFiClient.h>
+#include <WiFiServer.h>
+#include <WiFiUdp.h>
+#include <ESP8266wifi.h>
+#include <dht.h>
+
+// WiFi - Coloque aqui suas configurações de WI-FI
+const char ssid[] = "Redmi";//rede a se conectar a placa
+const char psw[] = "fitzgerald";//senha
+
+// Site remoto - Coloque aqui os dados do site que vai receber a requisição GET
+const char http_site[] = "https://colheita-feliz.herokuapp.com/api/post/status/";
+const int http_port = 8080;
+
+// Variáveis globais
+WiFiClient client;
+IPAddress server(192,168,0,23); //Endereço IP do servidor - http_site
+const int pinoDHT11 = A0;
+dht DHT;
+
+void setup() {
+  delay(30000); //Aguarda 30 segundos 
+  Serial.begin(9600);
+  Serial.println("Gravando dados no BD via GET");
+  Serial.println("Aguardando conexão");
+  
+  // Tenta conexão com Wi-fi
+WiFi.begin(ssid,psw);
+  while ( WiFi.status() != WL_CONNECTED ) {
+    delay(100);
+    Serial.print(".");
+  }
+  Serial.print("\nWI-FI conectado com sucesso: ");
+  Serial.println(ssid);
+
+}
+
+void loop() {
+  DHT.read11(pinoDHT11);
+  //Leitura do sensor DHT11
+  delay(3000); //delay entre as leituras
+  Serial.println("Gravando dados no BD: ");
+  Serial.print("Umidade: "); //IMPRIME O TEXTO NA SERIAL
+  Serial.print(DHT.humidity); //IMPRIME NA SERIAL O VALOR DE UMIDADE MEDIDO
+  Serial.print("%"); //ESCREVE O TEXTO EM SEGUIDA
+  Serial.print(" / Temperatura: "); //IMPRIME O TEXTO NA SERIAL
+  Serial.print(DHT.temperature, 0); //IMPRIME NA SERIAL O VALOR DE UMIDADE MEDIDO E REMOVE A PARTE DECIMAL
+  Serial.println("*C"); //IMPRIME O TEXTO NA SERIAL
+ // if (dht.read(humidity,&temperature, NULL)) {
+    //Serial.print("Falha na leitura do sensor.");
+    //return;
+  }
+  
+  
+
+  // Envio dos dados do sensor para o servidor via GET
+//  if ( !getPage((int)temperature,(int)humidity) ) {
+  //  Serial.println("GET request failed");
+  //}
+
+
+// Executa o HTTP GET request no site remoto
+bool getPage(int temperature,int humidity) {
+  if ( !client.connect(server, http_port) ) {
+    Serial.println("Falha na conexao com o site ");
+    return false;
+  }
+  String param = "?temp=" + String(DHT.temperature) + "&humid=" + String(DHT.humidity); //Parâmetros com as leituras
+  Serial.println(param);
+  client.println("GET /weather/insert_weather.php" + param + " HTTP/1.1");
+  client.println("Host: ");
+  client.println(http_site);
+  client.println("Connection: close");
+  client.println();
+  client.println();
+
+    // Informações de retorno do servidor para debug
+  while(client.available()){
+    String line = client.readStringUntil('\r');
+    Serial.print(line);
+  }
+  return true;
+}
+
+(Essa foi a primeir atentativa de teste , algumas partes comentadas para funcionamento do código)
